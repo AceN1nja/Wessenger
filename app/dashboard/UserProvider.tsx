@@ -46,6 +46,7 @@ export default function UserProvider({
       if (error) {
         console.log(error);
       } else {
+        console.log("SET SESSION")
         setSession(data.session);
       }
     };
@@ -56,13 +57,14 @@ export default function UserProvider({
       if (error) {
         console.log(error);
       } else {
-        console.log("SET USER");
+        console.log(data);
         setUser(data.user);
       }
+      return data.user;
     };
 
     //get user data
-    const getUserData = async () => {
+    const getUserData = async (user: User) => {
       const { data, error } = await supabase
         .from("users")
         .select()
@@ -78,12 +80,12 @@ export default function UserProvider({
     
     const Initialize = async () => {
       await getSession();
-      await getUser();
-      await getUserData();
+      const user = await getUser();
+      await getUserData(user!);
     };
 
     Initialize();
-  }, [user]);
+  }, []);
 
   const getUsername = () => {
     return userData?.username!;

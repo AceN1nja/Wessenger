@@ -12,16 +12,6 @@ export default function ProfilePage() {
   const username = getUsername();
   const fullName = getFullName();
 
-  if (!username) {
-    return (
-      <main
-        className={"flex w-full h-full justify-center items-center text-5xl"}
-      >
-        Loading...
-      </main>
-    );
-  }
-
   //ref for image upload
   const imageUploadRef = React.useRef<HTMLInputElement>(null);
 
@@ -43,6 +33,16 @@ export default function ProfilePage() {
     }
   };
 
+  if (!username) {
+    return (
+      <main
+        className={"flex w-full h-full justify-center items-center text-5xl"}
+      >
+        Loading...
+      </main>
+    );
+  }
+  
   return (
     <main
       className={

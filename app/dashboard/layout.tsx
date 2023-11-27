@@ -1,14 +1,14 @@
 import { ReactNode } from "react";
-import UserProvider from "./UserProvider";
 import MenuBar from "@/components/MenuBar";
 import SideMenu from "@/components/SideMenu";
+import dynamic from "next/dynamic";
 
-const isSSR = () => typeof window === "undefined";
+const UserProvider = dynamic(() => import("./UserProvider"), { ssr: false });
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <main>
-      {isSSR() && (
+      
         <UserProvider>
           <div className={"flex w-screen  h-screen "}>
             <SideMenu />
@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </UserProvider>
-      )}
+      
     </main>
   );
 }
