@@ -1,9 +1,11 @@
 "use client";
-import DarkModeToggle from "@/components/DarkModeToggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import LoginForm from "@/components/LoginForm";
 import SignUpForm from "@/components/SignUpForm";
+import dynamic from "next/dynamic";
+
+const DarkModeToggle = dynamic(() => import('@/components/DarkModeToggle'), { ssr: false })
 
 export default function Home() {
   return (

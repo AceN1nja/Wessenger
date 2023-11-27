@@ -2,9 +2,11 @@
 import React from 'react';
 import { usePathname } from 'next/navigation'
 import { User2 } from 'lucide-react';
-import DarkModeToggle from './DarkModeToggle';
+import dynamic from "next/dynamic";
 
-export default function SideMenu() {
+const DarkModeToggle = dynamic(() => import('@/components/DarkModeToggle'), { ssr: false })
+
+export default function MenuBar() {
   //get current url
   const pathname = usePathname()
   const pathList = pathname.split("/")
