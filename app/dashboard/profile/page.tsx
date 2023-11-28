@@ -6,9 +6,12 @@ import { createClient } from "@/lib/supabase/client";
 const supabase = createClient();
 import { UserContext } from "@/app/dashboard/UserProvider";
 import { ToolTip } from "@/components/ToolTip";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ProfilePage() {
-  const { getUsername, getFullName } = useContext(UserContext);
+  const { getUsername, getFullName, getInitials } = useContext(UserContext);
+  const { toast } = useToast();
+
   const username = getUsername();
   const fullName = getFullName();
 
@@ -29,6 +32,11 @@ export default function ProfilePage() {
         .upload(fileName, file, { cacheControl: "1", upsert: true });
       if (error) {
         console.log(error);
+      } else {
+        toast({
+          title: "Avatar",
+          description: "Profile image has been updated!",
+        });
       }
     }
   };
@@ -42,7 +50,7 @@ export default function ProfilePage() {
       </main>
     );
   }
-  
+
   return (
     <main
       className={
@@ -68,8 +76,21 @@ export default function ProfilePage() {
               }
               onClick={() => handleUploadClick()}
             >
-              <AvatarImage />
-              <AvatarFallback />
+              {getUsername() ? (
+                <AvatarImage
+                  src={
+                    `${process.env.NEXT_PUBLIC_AVATAR_URL}${getUsername()}#` +
+                    new Date().getTime()
+                  }
+                />
+              ) : (
+                <AvatarImage />
+              )}
+              {getInitials() ? (
+                <AvatarFallback>{getInitials()}</AvatarFallback>
+              ) : (
+                <AvatarImage />
+              )}
             </Avatar>
           </ToolTip>
         </div>

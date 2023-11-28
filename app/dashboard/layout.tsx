@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <SideMenu />
             <div className={"flex flex-col flex-1"}>
               <MenuBar />
+              
               {children}
             </div>
           </div>
