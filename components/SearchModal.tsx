@@ -32,7 +32,6 @@ export default function SearchModal() {
   const debouncedSearch = useDebounce(search, 500);
 
   useEffect(() => {
-    console.log("SEARCHING");
 
     const searchUsers = async () => {
       const { data, error } = await supabase
@@ -127,7 +126,6 @@ function ResultCard({ username, full_name }: Result) {
         console.log(error);
         setStatus("none");
       } else {
-        console.log(data);
         if (data.status) {
           setStatus(data.status);
         } else {

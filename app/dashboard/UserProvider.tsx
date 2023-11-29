@@ -12,6 +12,7 @@ interface ContextFunctions {
   getLastName: () => string;
   getFullName: () => string;
   getInitials: () => string;
+  hasMounted: boolean;
 }
 
 export const UserContext = createContext<ContextFunctions>({
@@ -21,6 +22,7 @@ export const UserContext = createContext<ContextFunctions>({
   getLastName: () => "",
   getFullName: () => "",
   getInitials: () => "",
+  hasMounted: false,
 });
 
 interface UserI {
@@ -38,6 +40,7 @@ export default function UserProvider({
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserI | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     //get session
@@ -46,7 +49,6 @@ export default function UserProvider({
       if (error) {
         console.log(error);
       } else {
-        console.log("SET SESSION")
         setSession(data.session);
       }
     };
@@ -57,7 +59,6 @@ export default function UserProvider({
       if (error) {
         console.log(error);
       } else {
-        console.log(data);
         setUser(data.user);
       }
       return data.user;
@@ -73,7 +74,6 @@ export default function UserProvider({
       if (error) {
         console.log(error);
       } else {
-        console.log("SET USER DATA");
         setUserData(data);
       }
     };
@@ -82,6 +82,7 @@ export default function UserProvider({
       await getSession();
       const user = await getUser();
       await getUserData(user!);
+      setHasMounted(true);
     };
 
     Initialize();
@@ -119,6 +120,7 @@ export default function UserProvider({
     getLastName,
     getFullName,
     getInitials,
+    hasMounted
   };
 
   return (
