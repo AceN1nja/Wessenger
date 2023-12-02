@@ -18,14 +18,14 @@ export default function Page() {
         "w-full h-full flex flex-row items-center justify-between border-t border-l rounded-tl-[20px]  dark:border-stone-400 border-stone-800 dark:border-opacity-10 p-4 space-x-4 "
       }
     >
-      <div className={"flex flex-col w-[30%] h-full justify-start items-start"}>
+      <div className={"flex flex-col w-[20%] h-full justify-start items-start"}>
         <div className="flex flex-row justify-start items-center space-y-3 text-3xl font-extralight">
-          Friend Requests
+          Requests
         </div>
         <FriendRequests />
       </div>
-      <Separator orientation="vertical" />
-      <div className={"flex flex-col w-[70%] h-full justify-start items-start"}>
+      <Separator orientation="vertical" className="bg-opacity-50"/>
+      <div className={"flex flex-col w-[80%] h-full justify-start items-start"}>
         <div className="flex flex-row justify-start items-center space-y-3 text-3xl font-extralight">
           Notifications
         </div>
@@ -104,6 +104,28 @@ function FriendRequests() {
       console.log(error);
     } else {
       console.log("accepted");
+      
+      //create a new  conversation between the two users
+      const { data, error } = await supabase
+        .from("conversations")
+        .insert({})
+        .select('id')
+        .single()
+      
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("conversation created with id ", data);
+
+        const { error } = await supabase
+          .from('user_conversations')
+          .insert([{user_id: user1, conversation_id: data.id}, {user_id: getUsername(), conversation_id: data.id}])
+        
+          if (error) {
+            console.log(error);
+          }
+      }
+      
     }
   };
 

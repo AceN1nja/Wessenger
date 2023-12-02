@@ -1,3 +1,11 @@
-export default function Messages() {
-  return <div>Messages</div>;
+export default function Page() {
+  return (
+    <main
+      className={
+        "w-full h-full flex flex-row items-center justify-center "
+      }
+    >
+      View your messages here!
+    </main>
+  );
 }

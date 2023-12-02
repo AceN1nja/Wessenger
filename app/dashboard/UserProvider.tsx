@@ -79,6 +79,7 @@ export default function UserProvider({
     };
     
     const Initialize = async () => {
+      console.log("initalizing");
       await getSession();
       const user = await getUser();
       await getUserData(user!);
