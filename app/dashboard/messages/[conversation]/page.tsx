@@ -1,39 +1,39 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { createClient } from "@/lib/supabase/client";
-import EmojiPicker, {Theme} from "emoji-picker-react";
-import { SmilePlus } from "lucide-react";
-import { useRef, useState } from "react";
-const supabase = createClient();
+import InputBar from "./InputBar";
+import Messages from "./ChatHistory";
 
-export default function Conversation({
+export const revalidate = 1;
+
+export default async function Conversation({
   params,
 }: {
   params: { conversation: string };
 }) {
-  const [input, setInput] = useState<String>("");
-    const inputRef = useRef<HTMLInputElement>(null);
+  const supabase = createClient(cookies());
+
+  const { data: user, error: userError } = await supabase.auth.getUser();
+
+  const { data: conversationData, error: conversationError } = await supabase
+    .from("chats")
+    .select()
+    .eq("conversation_id", params.conversation)
+    .order("created_at", { ascending: true })
+    .limit(100);
+
+  if (conversationError) {
+    console.log("conversationError", conversationError);
+  }
+
+  
+
   return (
     <main className="w-full h-full flex flex-col items-center justify-start ">
-      <div className="w-full h-[95%] "></div>
-      <div className="w-full h-[5%] flex flex-row justify-start items-center p-1 rounded-full dark:bg-transparent px-5 border border-stone-800 ">
-        <Popover>
-          <PopoverTrigger>
-            <SmilePlus />
-          </PopoverTrigger>
-          <PopoverContent className="w-[375px] h-[475px] p-3">
-            <EmojiPicker theme={Theme.DARK} onEmojiClick={(e) => {inputRef.current!.value+=e.emoji}}/>
-          </PopoverContent>
-        </Popover>
-
-        <Input ref={inputRef} className="w-full h-full dark:bg-transparent dark:border-transparent" onChange={(e) => setInput(e.target.value)}/>
+      <div className="w-full h-[95%] ">
+        <Messages conversation={params.conversation} data={conversationData ? conversationData : []}/>
       </div>
+      <InputBar conversation={params.conversation} />
     </main>
   );
 }
